@@ -1,9 +1,20 @@
 # Next js intro -2 (Backend side)
 
-- Benefits of both frontend and backend in next js:
-    - In single code base we can add both frontend & backend
-    - No cors issue, entire application will be hosted on single domain
-    - Ease of deployment
+
+### 📝 Table of Contents
+
+ - [Benefits of both frontend and backend in next js:](#benefits-of-both-frontend-and-backend-in-next-js)
+ - [Data fetching in next](#data-fetching-in-next)
+ - [Loaders in next](#loaders-in-next)
+ - [Api Routes in next](#api-routes-in-next)
+ - [Better fetch](#better-fetch)
+ - [Singleton Prisma](#singleton-prisma)
+ - [Server action](#server-action)
+
+### Benefits of both frontend and backend in next js:
+- In single code base we can add both frontend & backend
+- No cors issue, entire application will be hosted on single domain
+- Ease of deployment
 - In react we face the water fall problem. (For ex. blog website shown below)
     1. Browser send req to server (ex. www.somewebiste.com/blogs)
     2. sever returns empty html
@@ -68,7 +79,7 @@ export default function Loading() {
 - To create route create dir name “api” in app dir. Add another dir called “joke” in it. Add file route.ts. This page will be have all the code to handle request as well response.  Now our api routes will be “http://localhost:3000/api/joke”.
 - Now to handle HTTP `GET`  request we need to create GET function as shown below. We have also return the response by using our next `Response` object.
 
-```jsx
+```tsx
 //route.tsx
 export async function GET() {
   return Response.json({
@@ -83,7 +94,7 @@ export async function GET() {
 
 - All you need to change the url of the our home page that was used to fetch the jokes(other backend). (This isn’t the best way, we will see next serer action).
 
-```
+```tsx
 //page.tsx
 async function getJoke() {
   try {
@@ -101,7 +112,7 @@ async function getJoke() {
 
 - Similarly you can use POST method to handle incoming http post req. As you can see to grab data from incoming req we can use next `NextRequest` object whihc we accept as the argument of http Post method.
 
-```jsx
+```tsx
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -113,7 +124,7 @@ export async function POST(req: NextRequest) {
 
 - Working demo with prisma & postgres
 
-```jsx
+```tsx
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@/generated/prisma/client";
 
@@ -145,7 +156,7 @@ export async function GET() {
 - Previously to get the joke data we make request to our own server. Since the we have feature of Server sider render we can do that better way. Instead of joke lets render user details in the page.
 - We can directly make the db req and render that result on the page. Here is the ex.
 
-```jsx
+```tsx
 //user/page.tsx
 import { PrismaClient } from "@/generated/prisma/client";
 const client = new PrismaClient();
@@ -183,7 +194,7 @@ export default async function Home() {
 - Whenever we developing next js application, saving change will compile that application. The problem is on that every changes new next js prisma client instance was created. This leads to creation of multiple prisma clients , which consume more resource and cause unexpected behavior.
 - To solve this problem we create single instance of prisma client instance.
 
-```jsx
+```ts
 // lib/prisma.ts
 import { PrismaClient } from "@prisma/client";
 
@@ -205,7 +216,7 @@ import client from "@/db"
 - To make server action function create dir name “action” in “app”  dir. Create file user.tsx. Now all you have make function that take username and password as args, save to db and return some response.
 - We denote any funtion as server action by declration at top “user server”
 
-```jsx
+```tsx
 "use server";
 
 import client from "@/db";
@@ -227,7 +238,7 @@ export async function signup(username: string, password: string) {
 
 - Now in sign up simply called that function whenever user submit the form.
 
-```jsx
+```tsx
 "use client";
 import { signup } from "@/app/action/user";
 import { useState } from "react";
