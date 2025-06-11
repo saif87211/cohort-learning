@@ -23,9 +23,9 @@
 
 ### Data fetching in next
 
-- Let’s suppose our backend is somewhere else deployed. So how can we use that?
-- In next js m we do data fetching at the server side. On server side we fetched the data and prerender page before returning it to the browser.
-- For ex. as you can see in page.tsx made the simple asyn function to fetch user details.
+- Let’s suppose our backend is deployed on other server. So how can fetch data from server on next?
+- In next js we perform data fetching at the server side. On server we fetched the data and prerender page before returning it to the browser.
+- For ex. as you can see in page.tsx we added simple async function to fetch the joke.
 
 ```jsx
 //app/page.tsx
@@ -42,7 +42,7 @@ async function getJoke() {
 }
 ```
 
-- Now thing is to convert our page export function to async function. (not possible in react). Call the function and render it’s details.
+- Now thing is to convert our page export function to async function. (not possible in react), so we can call our async in it.
 
 ```jsx
 //app/page.tsx
@@ -59,8 +59,8 @@ export default async function Home() {
 
 ### Loaders in next
 
-- Next thing is to add loader when the page was loading. So in order to show loader when the page was loading(slow backend or data fetch take time), we need to add file called loader.tsx in the app dir. (For subsequent routes process will be same, for ex if you add another dir name user in app then route becomes “domain/user”, so to add loader simply add loading.tsx file in it.)
-- In next js this is called as streaming. On server when the data is being fetched, next js will stream the loading state while page being rendered.
+- Next thing is to add loader when the page was loading. So in order to show loader when the page was loading(slow backend or may be data fetching take some time), we need to add file called loading.tsx in the app dir. (For subsequent routes process will be same, for ex if you add another dir name "user" in app then route becomes “https://www.domain.com/user”, so to add loader simply add loading.tsx file in it.)
+- In next js this is called as streaming. On server when the data is being fetched, next js will stream the loading state while page is being rendered.
 
 ```jsx
 //loading.tsx
@@ -76,8 +76,8 @@ export default function Loading() {
 ### Api Routes in next
 
 - Next js allows us create frontend as well as backend in single codebase. Just like express we can also add routes as well.
-- To create route create dir name “api” in app dir. Add another dir called “joke” in it. Add file route.ts. This page will be have all the code to handle request as well response.  Now our api routes will be “http://localhost:3000/api/joke”.
-- Now to handle HTTP `GET`  request we need to create GET function as shown below. We have also return the response by using our next `Response` object.
+- To create route create dir name “api” in app dir. Add another dir called “joke” in it. Add file route.ts. This page will be have all the code to handle request as well response. Now our api routes will be “http://localhost:3000/api/joke”.
+- Now to handle HTTP `GET` request we need to create GET function as shown below. We have also return the response by using our next `Response` object.
 
 ```tsx
 //route.tsx
@@ -89,10 +89,9 @@ export async function GET() {
     },
   });
 }
-
 ```
 
-- All you need to change the url of the our home page that was used to fetch the jokes(other backend). (This isn’t the best way, we will see next serer action).
+- All you need to change the url of the our home page, that was used to fetch the jokes(other backend). (This isn’t the best way, we will see next sever actions).
 
 ```tsx
 //page.tsx
@@ -110,7 +109,7 @@ async function getJoke() {
 }
 ```
 
-- Similarly you can use POST method to handle incoming http post req. As you can see to grab data from incoming req we can use next `NextRequest` object whihc we accept as the argument of http Post method.
+- Similarly you can use POST method to handle incoming http post req. As you can see to grab data from incoming req we can use next `NextRequest` object which we accept as the argument of http Post method.
 
 ```tsx
 import { NextRequest, NextResponse } from 'next/server';
@@ -153,7 +152,7 @@ export async function GET() {
 
 ### Better fetch
 
-- Previously to get the joke data we make request to our own server. Since the we have feature of Server sider render we can do that better way. Instead of joke lets render user details in the page.
+- Previously, to get the joke data we make request to our own server. Since the we have feature of Server sider render we can do that better way. Instead of joke, lets render user details in the page.
 - We can directly make the db req and render that result on the page. Here is the ex.
 
 ```tsx
@@ -191,8 +190,8 @@ export default async function Home() {
 
 ### Singleton Prisma
 
-- Whenever we developing next js application, saving change will compile that application. The problem is on that every changes new next js prisma client instance was created. This leads to creation of multiple prisma clients , which consume more resource and cause unexpected behavior.
-- To solve this problem we create single instance of prisma client instance.
+- Whenever we developing next js application, saving change will compile that application again. The problem is on that every changes, new next js prisma client instance was created. This leads to creation of multiple prisma clients, which consume more resource and cause unexpected behavior.
+- To solve this problem we create single instance of prisma client.
 
 ```ts
 // lib/prisma.ts
@@ -211,10 +210,10 @@ import client from "@/db"
 
 ### Server Action
 
-- We have create post api end point to handle incoming post req. Bu next js take this also to next level by server action.
+- We have create post api end point to handle incoming post req. But next js take this also to next level using server actions.
 - Server action are async functions that are executed on server. They can be called in server and client component to handle form submission.
 - To make server action function create dir name “action” in “app”  dir. Create file user.tsx. Now all you have make function that take username and password as args, save to db and return some response.
-- We denote any funtion as server action by declration at top “user server”
+- We denote any funtion as server action by declration at top “user server”.
 
 ```tsx
 "use server";
