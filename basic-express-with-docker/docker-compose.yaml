@@ -1,0 +1,32 @@
+version: "3.0"
+
+services:
+  postegresdb1.0:
+    image: postgres
+    container_name: postegresdb1.0
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+    volumes:
+      - app-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+  app1.0:
+    build: .
+    container_name: app1.0
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:mysecretpassword@postegresdb1.0:5432/postgres
+      - PORT=4000
+      - TOKEN_SECRET=afefadkfhauefaoeibfae8a6df59ad3f1a8dfasdf
+      - TOKEN_EXPIRY=1d
+    networks:
+      - app-network
+    depends_on:
+      - postegresdb1.0
+networks:
+  app-network:
+volumes:
+  app-data:
